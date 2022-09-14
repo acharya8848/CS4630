@@ -73,7 +73,7 @@ Part 2:  Analyzing Disassembled Code (Analyze your disassembly of funcs.exe)
 
 
 6. Does f2 have any local variables? If so, how many and at what memory addresses? 
--> f2 moved the stack up by 16, so it has 
+-> f2 moved the stack up by 16, so it allocated space for variables. It seems like it has only one local variable though.
 
 7. Does f3 have any local variables? If so, how many and at what memory addresses? 
 -> f3 has no local variables
