@@ -1,0 +1,36 @@
+The first thing I did was disassemble the target file named 'target.exe' using
+objdump. This gave me the answers for the questions below. This also gave me
+the opportunity to see how the program was structured and how it worked.
+Initially, I wrote a python script that searched for the nop sleds in the file
+and printed them on the screen. The numbers I got from this script were
+absolute byte addresses of these nop sleds and this is where I was supposed to
+inject the jump and the virus code. I also figured out that the default
+starting address for a 32 bit elf file was 0x08048000 which meant adding it to
+the absolute byte offsets gave me the relative addresses of the instructions
+when the program was running.
+
+I then took those numbers and basically wrote a simple c program that reads the
+target file contents into a buffer of character pointer as bytes and replaces
+the bytes at the given addresses with the new instructions for the virus code.
+The modified buffer is then written to a new file named 'infected-target.exe'.
+This infected file when executed, runs normally until the function
+InitializeApplication is called. At the end of this function, instead of
+normally returning like it used to, now it jumps to another segment of the
+codebase where it executes the viral payload. After this, the program returns
+to the original codebase and continues execution as originally expected of it.
+
+
+(a) What is the file offset of the start of the function main?
+	The file offsest of the start of the function main is 1179.
+	This translates to the relative address of 0x0804849b when the program is
+	loaded into memory.
+
+(b) What is the file offset of the start of the function TerminateApplication?
+	The file offset of the start of the function TerminateApplication is 1062.
+	This translates to the relative address of 0x08048426 when the program is
+	loaded into memory.
+
+(c) What is the file offset of the start of the function IntializeApplication?
+	The file offset of the start of the function IntializeApplication is 1152.
+	This translates to the relative address of 0x08048480 when the program is
+	loaded into memory.

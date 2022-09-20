@@ -83,3 +83,7 @@ dkms.conf
 *.exe
 *.out
 *.app
+
+# HW3
+*.dmp
+infect
