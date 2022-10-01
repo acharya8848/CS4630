@@ -87,3 +87,8 @@ dkms.conf
 # HW3
 *.dmp
 infect
+
+# HW4
+!**/dumbledore.exe
+!**/format_string_vulnerability.exe
+input.txt
