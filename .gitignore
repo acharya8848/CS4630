@@ -89,6 +89,10 @@ dkms.conf
 infect
 
 # HW4
-!**/dumbledore.exe
-!**/format_string_vulnerability.exe
 input.txt
+# A
+!**/dumbledore.exe
+# B
+!**/format_string_vulnerability.exe
+**/attack
+**/benign
