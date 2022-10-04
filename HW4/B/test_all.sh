@@ -20,7 +20,7 @@ fi
 OUTPUT="$(./format_string_vulnerability.exe < input.txt)"
 if [ $? -ne 0 ]; then
 	echo "failed. Program crashed!"
-elif echo "$OUTPUT" | grep -q "I recommend that you get a grade of D on this assignment."; then
+elif echo $OUTPUT | grep -q "I recommend that you get a grade of D on this assignment."; then
 	echo "passed."
 else
 	echo "failed. Program did not print the correct message."
@@ -29,7 +29,7 @@ printf "=%.0s" {1..80}
 echo
 echo -n "Testing attack input..."
 if [ ! -f "./attack" ]; then
-	echo -n "compiling generator..."
+	echo -n "generator not found, compiling..."
 	$CXX $CXXFLAGS format_string_attack.c -o attack > /dev/null
 	if [ $? -ne 0 ]; then
 		echo "failed to compile generator!"
@@ -42,7 +42,7 @@ fi
 OUTPUT="$(./format_string_vulnerability.exe < input.txt)"
 if [ $? -ne 0 ]; then
 	echo "failed. Program crashed!"
-elif echo "$OUTPUT" | grep -q "I recommend that you get a grade of A on this assignment."; then
+elif echo $OUTPUT | grep -q "I recommend that you get a grade of A on this assignment."; then
 	echo "passed."
 else
 	echo "failed. Program did not print the correct message."
