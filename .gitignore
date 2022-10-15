@@ -96,3 +96,8 @@ input.txt
 !**/format_string_vulnerability.exe
 **/attack
 **/benign
+
+# HW5
+# A
+!**/dumbledore_rop.exe
+**/ROPgadget-4.0.2
