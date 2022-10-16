@@ -3,7 +3,7 @@
 def main():
     padding = "Anubhav Acharya. This is the padding that will fill the buffer."
     print(len(padding))
-    while len(padding) != 116:
+    while len(padding) != 112:
         padding+= "A"
 
     formatted_padding = ""
