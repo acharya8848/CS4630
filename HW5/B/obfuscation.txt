@@ -1,0 +1,28 @@
+1. 
+
+
+2. On analyzing the file "foobar.c", it seems as though the split obfuscation
+	was applied to it using the tigress tool. The function "subroutine1" seems
+	to have been split into two parts called:
+
+		- _1_subroutine1_subroutine1_split_1
+		- _1_subroutine1_subroutine1_split_2
+
+	The first split intializes local variables i, j, and k of subroutine1 to
+	c, b, and a respectively. The second split then performs the following
+	operation 10 times before returning back:
+
+		- sum = i + j + k
+
+	After the second split, subroutine1 then returns the value in sum.
+
+	The obfuscated function subroutine1 takes three integer arguments, adds
+	them together and returns the final sum to the caller.
+
+
+3. After a rundown of the control flow for the function, the following seems
+	to be the deobfuscated version of the given function:
+
+		int barfoo(int x, int y) {
+			return 14;
+		}
