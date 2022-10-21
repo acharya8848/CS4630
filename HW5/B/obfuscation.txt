@@ -25,8 +25,15 @@
 
 
 3. After a rundown of the control flow for the function, the following seems
-	to be the deobfuscated version of the given function:
+	to be the optimized deobfuscated version of the given function:
 
 		int barfoo(int x, int y) {
 			return 14;
 		}
+
+	I removed the integer array 'a' because it wasn't being utilized for
+	anything useful after the unncessary conditions were removed. This is
+	the most optimized version of the obfuscated code. I kept the function
+	signature the same as flatten doesn't seem to change it, even though the
+	parameters are not being used for anything else. This function behaves
+	exactly as the obfuscated function.
