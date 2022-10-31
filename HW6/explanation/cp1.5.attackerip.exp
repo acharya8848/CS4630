@@ -1,0 +1,13 @@
+The file '/var/log/auth.log' was monumental when it came to finding what ip
+addresses the attacks orginianted from. SSHD, with PAM kept a track of what
+ips tried logging into the computer regardless of whether the attempt failed
+or succeeded. The first time the ip '10.46.1.105' is ever seen is on the third
+of November at 18:32:06. This seems to be a precursor to the actual login
+attempt over SSH five seconds later. This same ip then goes on to successfully
+inflitrate the victim's computer by guessing the root account password.
+
+There is a successful login from the ip '10.46.1.106' on the fourth of November
+at 21:14:30, using the victim's userid instead of root. Even though there isn't
+enough information regarding the activities of this ip, the credentials were
+already compromised earlier which makes me believe this is also an attacking ip
+address.
