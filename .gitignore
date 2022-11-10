@@ -103,9 +103,15 @@ input.txt
 **/ROPgadget-4.0.2
 
 # HW6
+**/assignment6-forensics.pdf
 # Victim
 **/victim.raw
 **/DADAVictim/
-**/assignment6-forensics.pdf
-!/HW6/explanation/**
+!/HW6/VictimExplanation/**
 !/HW6/VictimAnswers/**
+# Suspect
+**/suspect.raw
+**/suspect.ova
+**/DADASuspect/
+!/HW6/SuspectExplanation/**
+!/HW6/SuspectAnswers/**
