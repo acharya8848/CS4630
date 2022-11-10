@@ -1,0 +1,7 @@
+I calculated the byte offset as follows:
+	Partition offset:- 997376
+	Relative Starting address:- 593548
+Hence, adding the two together
+	Absolute Starting address:- 1590924
+
+All the information was obtained by using the 'istat' tool in autopsy.

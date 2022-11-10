@@ -1,0 +1,4 @@
+To get the file list, I used the 'Timeline' functionality in autopsy. I can
+then apply filters to the shown filenames in the table such that only file
+system changes are shown. I can also specify a specific window of time in which
+to look for changes. The list of files were obtained through this procedure.

@@ -1,0 +1,23 @@
+Once again, I analyzed the DHCP logs written by NetworkManager in the location
+'/var/lib/NetworkManager/' directory in order to find out the attacker's ip
+address during the attacks.
+
+In the log file
+'/var/lib/NetworkManager/dhclient-456cc2a8-59d7-4edd-99a8-477a9e9e3369-eth0.lease'
+modified on the fourth of November 02:47:39, the ip address for the device
+enp0s3 is listed as '10.46.1.105'.
+
+In the log file
+'/var/lib/NetworkManager/dhclient-9812d4c9-3595-42b8-91de-eef3376f3fde-eth0.lease'
+modified on the fourth of November 22:12:44, the ip address for the device
+enp0s3 is listed as '10.46.1.106'.
+
+The ip address changed once over the duration of the attack. Also, there are
+multiple DHCP leases during the period of attack, but I chose to only include
+these addresses because the victim doesn't seem to be operating an ssh server
+that was visible from the internet over their custom domain name and the only
+way to communicate with the victim would be through a common network and an ip
+address.
+
+The ip address was '10.46.1.105' even before 02:47:39, but the lease might have
+been refreshed at that time which caused the file modification time to change.

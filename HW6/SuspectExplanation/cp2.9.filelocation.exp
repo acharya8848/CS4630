@@ -1,0 +1,11 @@
+The file was unallocated from the disk and I couldn't recover it even when I
+used photorec.
+
+The location of the file in the attacker's computer was:
+	/home/wh1t3r0s3/Desktop/evilplan.doc
+
+Because the file was unallocated from the disk, 'istat' didn't show me the
+size or the block address of the file in the image.
+
+Autopsy did, however, give me the hash of the file even though it was not
+possible to recover it.

@@ -1,0 +1,15 @@
+The public key of an ssh server that a computer has attempted to connect to can
+be retreived from the following file:
+	~/.ssh/known_hosts
+
+This file was populated with one entry containing the ecdsa public key of the
+victim's computer. I made a note of this public key and started going through
+the victim's image. The default server keys for ssh are stored in the following
+location:
+	/etc/ssh
+
+Because I knew the type of key and had the public key, it was just a matter of
+going through the keys in the victim's maching until I found a match.
+
+The public ecdsa key was in the file 'ssh_host_ecdsa_key.pub' while the private
+key was in the file 'ssh_host_ecdsa_key'.

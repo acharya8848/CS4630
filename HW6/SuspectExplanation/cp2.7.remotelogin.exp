@@ -1,0 +1,7 @@
+The attacker tried to login through multiple different usernames like:
+	root
+	sexyman
+	johnnydoe461
+
+The reason I chose johnnydoe461 as my answer is because it was the most
+recently used username for an ssh login attempt.

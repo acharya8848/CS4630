@@ -1,0 +1,3 @@
+The file found in the image is not really a script, but rather a boot seqence
+for the Puppy OS running on the image. This file does have the commands that
+run the dangerous behavior of filling up the drive with zeros at bootup.

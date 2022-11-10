@@ -1,0 +1,4 @@
+This is the first time the system ever saw this ip address attempt to connect
+through SSH. This is the precursor to the actual login attempt that happens
+five seconds after this log entry was written. This precursor is called
+'preauth' in the 'auth.log' file.

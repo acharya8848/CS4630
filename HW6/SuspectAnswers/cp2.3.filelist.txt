@@ -1,0 +1,7 @@
+/home/wh1t3r0s3/.xsession-errors
+/home/wh1t3r0s3/Desktop/password.txt
+/home/wh1t3r0s3/.cache/upstart
+/home/wh1t3r0s3/.cache/upstart/dbus.log
+/home/wh1t3r0s3/.cache/upstart/lxsession.log
+/home/wh1t3r0s3/.cache/lxsession/Lubuntu/run.log
+/home/wh1t3r0s3/.gconf/.testing.writeability
